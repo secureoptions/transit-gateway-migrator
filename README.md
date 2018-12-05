@@ -16,6 +16,7 @@ The TGW Migrator is a tool which provides a relatively seamless migration path f
     In the Cloudformation console wait for the stack to complete deployment and then click on the **Outputs** tab. This will have the public IP that you need to SSH into the TGW Migrator EC2
   </li>
   <li>
-    SSH into the TGW Migrator EC2 then change into the tool's directory
+    SSH into the TGW Migrator EC2 then change into the tool's directory:
+    <code>cd tgw-migrator/</code>
   </li>
  </ol>
