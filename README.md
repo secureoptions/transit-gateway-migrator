@@ -1,7 +1,7 @@
 # TGW Migrator
 
 **Description** <br>
-The TGW Migrator is a tool which provides a relatively seamless migration path from transit VPC solutions to AWS Transit Gateway. It can also be used to quickly attach and enable routing between VPCs through a common AWS Transit Gateway even if they are not part of a transit VPC.
+The TGW Migrator is a tool which provides a seamless migration path from transit VPC solutions to AWS Transit Gateway. It can also be used to quickly attach and enable routing between VPCs through a common AWS Transit Gateway even if they are not part of a transit VPC.
 
 ## Important Limitations <br>
 - This tool can only migrate VPCs to a Transit Gateway which are all in the same AWS region.
