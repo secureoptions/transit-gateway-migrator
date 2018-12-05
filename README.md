@@ -32,6 +32,18 @@ Make sure that each VPC that you intend to migrate to a Transit Gateway has at l
  </ol>
  
  ## Instructions to Migrate Transit VPC to Transit Gateway<br>
- If you have been using a transit VPC then your architecture likely looks like the following diagram<br>
+ If you have been using a transit VPC in AWS then your architecture likely looks like the following diagram<br>
+ <br>
  <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure1.PNG" align="center" width="700" height="350"/>
+ <br>
+ When you deploy the TGW Migrator tool, you will move your VPCs off of transit VPC unto Transit Gateway in two steps:
+ <ol>
+  <li> Start the tool and choose <b>A) Attach VPCs to TGW</b></li>
+  <li> Once the tool has finished attaching the VPCs, run it again and choose <b>B) Enable routing between attached VPCs</b>. This step will actually move your traffic off of the transit VPC since it inserts static routes into each of the VPCs' main route table (static routes take preference over BGP propagated routes from the transit VPC)</li>
+  <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between VPCs and detach VPCs from TGW</b></li>
+  </ol>
+ <br>
+ Below is an illustration of these steps:
+ <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure2.PNG" align="center" width="700" height="350"/>
+ 
  
