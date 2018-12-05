@@ -1,0 +1,264 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "This template will deploy a t2.small EC2 in a new VPC.The EC2 has a python script on it which will assist you in attaching your VPCs to a Transit Gateway and enabling routing between them.",
+	"Metadata": {
+		"AWS::CloudFormation::Interface": {
+			"ParameterLabels": {
+				"KeyName": {
+					"default": "SSH Keyname"
+				},
+                "SshCidr": {
+                    "default": "SSH Source"
+                }
+			}
+
+		}
+	},
+
+	"Parameters": {
+		"KeyName": {
+			"Description": "the private key that you want to use to SSH into the TGW migrator EC2 with.",
+            "Type": "AWS::EC2::KeyPair::KeyName",
+            "AllowedPattern": ".+",
+            "ConstraintDescription" : "You must choose a valid key to SSH into the TGW-Migrator EC2"
+        },
+        "SshCidr": {
+            "Description": "the source public IP range you want to open SSH up to in the TGW Migrator Security Group. If coming from a single public IP, specify as x.x.x.x/32. You can also leave this open to 0.0.0.0/0 to allow all sources.",
+            "Type": "String",
+            "Default": "0.0.0.0/0",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+        }
+	},
+
+	"Mappings": {
+		"RegionMap": {
+			"us-east-1": {
+				"AmazonLinux": "ami-0080e4c5bc078760e"
+            },
+            "us-east-2": {
+                "AmazonLinux": "ami-0cd3dfa4e37921605"
+            },
+			"us-west-1": {
+				"AmazonLinux": "ami-0ec6517f6edbf8044"
+			},
+			"us-west-2": {
+				"AmazonLinux": "ami-01e24be29428c15b2"
+			},
+			"eu-west-1": {
+				"AmazonLinux": "ami-08935252a36e25f85"
+			},
+			"eu-west-2": {
+				"AmazonLinux": "ami-01419b804382064e4"
+            },
+            "eu-west-3": {
+                "AmazonLinux": "ami-0dd7e7ed60da8fb83"
+            },
+			"ap-southeast-1": {
+				"AmazonLinux": "ami-05b3bcf7f311194b3"
+			},
+			"ap-southeast-2": {
+				"AmazonLinux": "ami-02fd0b06f06d93dfc"
+			},
+			"ap-northeast-1": {
+				"AmazonLinux": "ami-00a5245b4816c38e6"
+			},
+			"ap-northeast-2": {
+				"AmazonLinux": "ami-00dc207f8ba6dc919"
+            },
+            "ap-northeast-3": {
+				"AmazonLinux": "ami-0b65f69a5c11f3522"
+			},
+			"sa-east-1": {
+				"AmazonLinux": "ami-05145e0b28ad8e0b2"
+			},
+			"eu-central-1": {
+				"AmazonLinux": "ami-0cfbf4f6db41068ac"
+			},
+			"ca-central-1": {
+				"AmazonLinux": "ami-07423fb63ea0a0930"
+			},
+			"ap-south-1": {
+				"AmazonLinux": "ami-0ad42f4f66f6c1cc9"
+			}
+
+		}
+	},
+
+	"Resources": {
+        "TgwMigratorVpc": {
+            "Type" : "AWS::EC2::VPC",
+            "Properties" : {
+               "CidrBlock" : "10.15.0.0/16",
+               "Tags" : [ {"Key" : "Name", "Value" : "TgwMigratorVpc"}]
+            }
+         },
+         
+        "TgwMigratorIgw": {
+            "Type" : "AWS::EC2::InternetGateway",
+            "Properties" : {}
+        },
+
+        
+        "TgwMigratorIgwAttachment": {
+            "Type" : "AWS::EC2::VPCGatewayAttachment",
+            "Properties" : {
+            "InternetGatewayId" : {"Ref" : "TgwMigratorIgw"},
+            "VpcId" : { "Ref" : "TgwMigratorVpc"}
+            }
+        }, 
+        
+        "TgwMigratorRouteTable": {
+                "Type" : "AWS::EC2::RouteTable",
+                "Properties" : {
+                "VpcId" : {"Ref" : "TgwMigratorVpc"},
+                "Tags" : [{"Key" : "Name", "Value" : "TgwMigratorRouteTable"} ]
+                }
+            },  
+        "TgwMigratorCreateRoute": {
+            "Type" : "AWS::EC2::Route",
+            "Properties" : {
+              "DestinationCidrBlock" : "0.0.0.0/0",
+              "GatewayId" : {"Ref" : "TgwMigratorIgw"},
+              "RouteTableId" : {"Ref" : "TgwMigratorRouteTable"}
+            }
+          },
+
+        "TgwMigratorSubnet": {
+                "Type" : "AWS::EC2::Subnet",
+                "Properties" : {
+                  "CidrBlock" : "10.15.16.0/24",
+                  "Tags" : [{"Key" : "Name", "Value" : "TgwMigratorSubnet"}],
+                  "VpcId" : {"Ref" : "TgwMigratorVpc"}
+                }
+        },
+        "TgwMigratorSubnetRouteTableAssociation": {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+              "RouteTableId" : {"Ref" : "TgwMigratorRouteTable"},
+              "SubnetId" : {"Ref" : "TgwMigratorSubnet"}
+            }
+          },
+
+        "TgwMigratorUpdateSg" : {
+            "Type" : "AWS::EC2::SecurityGroupIngress",
+            "Properties" : {
+              "CidrIp" : {"Ref" : "SshCidr"},
+              "Description" : "Allows user to SSH into TGW-migrator EC2",
+              "FromPort" : 22,
+              "GroupId" : {"Fn::GetAtt" : ["TgwMigratorVpc","DefaultSecurityGroup"]},
+              "IpProtocol" : "tcp",
+              "ToPort" : 22,
+              "Tags" : [{"Key":"Name","Value":"TGW-Migrator-SG"}]
+            }
+          },
+		"TgwMigratorPolicy": {
+			"Type": "AWS::IAM::Policy",
+			"Properties": {
+				"Roles": [{
+						"Ref": "TgwMigratorRole"
+					}
+				],
+				"PolicyName": "TgwMigratorApiAccess",
+				"PolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [{
+							"Effect": "Allow",
+							"Action": [
+                                "ec2:CreateTransitGateway",
+                                "ec2:CreateTransitGatewayVpcAttachment",
+                                "ec2:CreateRoute",
+                                "ec2:DescribeTransitGateways",
+                                "ec2:DescribeSubnets",
+                                "ec2:DescribeVpcs",
+                                "ec2:DescribeAvailabilityZones",
+                                "ec2:DescribeRouteTables",
+                                "ec2:DescribeCustomerGateways",
+                                "ec2:DescribeVpnConnections",
+                                "ec2:DescribeVpnGateways",
+                                "ec2:DescribeTransitGatewayVpcAttachments",
+                                "ec2:DeleteTransitGatewayVpcAttachment",
+                                "ec2:DeleteTransitGateway",
+                                "ec2:DeleteRoute"
+							],
+							"Resource": "*"
+						    }]
+
+				        }
+                    }
+        },
+
+        "TgwMigratorEip": {
+            "Type" : "AWS::EC2::EIP",
+            "Properties" : {
+               "Domain" : "vpc",
+               "InstanceId" : {"Ref" : "TgwMigrator"}
+            }
+         },
+
+        "TgwMigratorRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": "ec2.amazonaws.com"
+							},
+							"Action": "sts:AssumeRole"
+						}
+					]
+				},
+				"Path": "/"
+			}
+        },
+
+
+
+        "TgwMigratorProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+               "Path": "/",
+               "Roles": [ {"Ref" : "TgwMigratorRole"} ],
+               "InstanceProfileName": "TgwMigratorProfile"
+            }
+         },  
+
+        "TgwMigrator": {
+            "Type" : "AWS::EC2::Instance",
+            "Properties" : {
+               "IamInstanceProfile" : {"Ref" : "TgwMigratorProfile"},
+               "ImageId" : {"Fn::FindInMap" : ["RegionMap", {"Ref" : "AWS::Region"},"AmazonLinux"]},
+               "InstanceType" : "t2.small",
+               "KeyName" : {"Ref" : "KeyName"},
+               "NetworkInterfaces" : [
+                    {
+                        "DeleteOnTermination" : "True",
+                        "DeviceIndex" : 0,
+                        "SubnetId" : {"Ref":"TgwMigratorSubnet"},
+                        "GroupSet" : [{"Fn::GetAtt" : ["TgwMigratorVpc","DefaultSecurityGroup"]}]
+                    }
+               ],
+               "UserData": {
+                "Fn::Base64": {
+                    "Fn::Join": ["", [
+                            "#!/bin/bash -xe\n",
+                            "# Pull down TGW migrator & extract it\n",
+                            "wget -O /home/ec2-user/tgw-migrator.tar.gz https://github.com/secureoptions/transit-gateway-migrator/raw/master/tgw-migrator.tar.gz\n",
+                            "tar -C /home/ec2-user/ -xvzf /home/ec2-user/tgw-migrator.tar.gz\n",
+                            "rm -f /home/ec2-user/tgw-migrator.tar.gz\n"
+
+                        ]]
+                    }
+                },
+               "Tags" : [ {"Key" : "Name", "Value" : "TGW-Migrator"}]
+            }
+         }
+    },
+    "Outputs" : {
+        "Access" : {
+          "Description" : "Command to use to SSH into the TGW-Migrator (assuming your private key is in your home directory)",
+          "Value" : {"Fn::Join" : [ "", ["ssh -i ~/",{"Ref" : "KeyName"},".pem ec2-user@", {"Ref" : "TgwMigratorEip"}]]}
+        }
+    }
+}
