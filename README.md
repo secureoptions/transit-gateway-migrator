@@ -33,5 +33,5 @@ Make sure that each VPC that you intend to migrate to a Transit Gateway has at l
  
  ## Instructions to Migrate Transit VPC to Transit Gateway<br>
  If you have been using a transit VPC then your architecture likely looks like the following diagram<br>
- <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure1.PNG" align="center" width="600" height="400"/>
+ <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure1.PNG" align="center" width="800" height="400"/>
  
