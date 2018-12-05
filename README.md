@@ -10,6 +10,6 @@ The TGW Migrator is a tool which provides a relatively seamless migration path f
 
 ## General Deployment
 <ol>
-  <li> <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=CloudShroud&templateURL=https://s3.amazonaws.com/secure-options/tgw-migrator-cf.json"><img src="https://s3.amazonaws.com/cloudformation-examples/cloudformation-launch-stack.png" width="75" height="25"/></a>
+  <li> <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=TGW-Migrator&templateURL=https://s3.amazonaws.com/secure-options/tgw-migrator-cf.json">Click Here</a> to launch the Cloudformation Stack
   </li>
  </ol>
