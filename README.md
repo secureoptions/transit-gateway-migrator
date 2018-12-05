@@ -13,7 +13,7 @@ The TGW Migrator is a tool which provides a seamless migration path from transit
   <li> <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=TGW-Migrator&templateURL=https://s3.amazonaws.com/secure-options/tgw-migrator-cf.json">Click Here</a> to launch the Cloudformation Stack
   </li> 
   <li>
-    In the Cloudformation console wait for the stack to complete deployment and then click on the **Outputs** tab. This will have the public IP that you need to SSH into the TGW Migrator EC2
+    In the Cloudformation console wait for the stack to complete deployment and then click on the <b>Output</b> tab. This will have the public IP that you need to SSH into the TGW Migrator EC2
   </li>
   <li>
     SSH into the TGW Migrator EC2 then change into the tool's directory:<br>
