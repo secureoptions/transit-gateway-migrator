@@ -30,3 +30,8 @@ Make sure that each VPC that you intend to migrate to a Transit Gateway has at l
     <code>./tgw-migrator.py</code>
   </li>
  </ol>
+ 
+ ## Instructions to Migrate Transit VPC to Transit Gateway<br>
+ If you have been using a transit VPC then your architecture likely looks like the following diagram<br>
+ <img src="illustrations/
+ 
