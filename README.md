@@ -63,8 +63,7 @@ Make sure that each VPC that you intend to migrate to a Transit Gateway has at l
  <br>
  When you deploy the TGW Migrator tool, you will move your VPCs off of transit VPC unto Transit Gateway in two steps:
  <ol>
-  <li> Start the tool and choose <b>A) Attach VPCs to TGW</b></li>
-  <li> At some point during the attachment process, you will be asked to provide the Customer Gateway (CGW) public IP of one of the hub routers in your transit VPC. Note that if you are running two or more hub routers for redundancy, you can simply choose one of their IPs at random (so '1.1.1.1' could be used in the Figure 1 for example). The tool will use this to trace down all the connected VPNs and their respective spoke VPCs that need to be migrated to the Transit Gateway.
+  <li> Start the tool and choose <b>A) Attach VPCs to TGW</b>. At some point during the attachment process, you will be asked to provide the Customer Gateway (CGW) public IP of one of the hub routers in your transit VPC. Note that if you are running two or more hub routers for redundancy, you can simply choose one of their IPs at random (so '1.1.1.1' could be used in the Figure 1 for example). The tool will use this to trace down all the connected VPNs and their respective spoke VPCs that need to be migrated to the Transit Gateway.
   <li> Once the tool has finished attaching the VPCs, run it again and choose <b>B) Enable routing between attached VPCs</b>. This step will actually move your traffic off of the transit VPC since it inserts static routes into each of the VPCs' main route table which point to the Transit Gateway as the next hop (static routes take preference over BGP propagated routes from the transit VPC)</li>
   <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between VPCs and detach VPCs from TGW</b></li>
   </ol>
