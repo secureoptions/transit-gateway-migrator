@@ -47,3 +47,8 @@ Make sure that each VPC that you intend to migrate to a Transit Gateway has at l
  <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure2.PNG" align="center" width="700" height="350"/>
  
  
+## Instructions to Automatically Attach Other VPCs to Transit Gateway
+The TGW Migrator can also be used as a tool to easily and quickly attach any VPC to a Transit Gateway, not just spoke VPCs that are part of a transit VPC solution. To attach a standalone VPC simply add a tag to the VPC, with the <i>Key</i> being <b>attach-tgw</b> and the <i>Value</i> being <b>true</b> (note: this is case sensitive so make sure to make them lowercase)
+<br>
+Your tag should look like this<br>
+ <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure3.PNG" align="center" width="700" height="350"/>
