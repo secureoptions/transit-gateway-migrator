@@ -50,5 +50,13 @@ Make sure that each VPC that you intend to migrate to a Transit Gateway has at l
 ## Instructions to Automatically Attach Other VPCs to Transit Gateway
 The TGW Migrator can also be used as a tool to easily and quickly attach any VPC to a Transit Gateway, not just spoke VPCs that are part of a transit VPC solution. To attach a standalone VPC simply add a tag to the VPC, with the <i>Key</i> being <b>attach-tgw</b> and the <i>Value</i> being <b>true</b> (note: this is case sensitive so make sure to make them lowercase)
 <br>
-Your tag should look like this<br>
+<br>
+Your tag should then look like this<br>
  <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure3.PNG" align="center" width="700" height="400"/>
+<br>
+Once you have tagged the VPCs you want to attach:
+<ol>
+  <li>Start the tool and choose <b>A) Attach VPCs to TGW</b></li>
+  <li>Once the tool has finished attaching the VPCs, run it again and choose <b>B) Enable routing between attached VPCs</b>. This step will actually start routing your traffic between VPCs over the TGW</li>
+  <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between VPCs and detach VPCs from TGW</b></li>
+  </ol>
