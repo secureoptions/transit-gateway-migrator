@@ -7,7 +7,7 @@
 - [General Deployment](#deployment)
 - [Instructions to Migrate Transit VPC to Transit Gateway](#transitvpc)
 - [Instructions to Attach Standalone VPCs to Transit Gateway](#taggedvpc)
-- [Author](#author)
+- [Contributors](#contributors)
 <br>
 
 <br>
@@ -87,9 +87,10 @@ Once you have tagged the VPCs you want to attach:
   <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between VPCs and detach VPCs from TGW</b></li>
   </ol>
 <br>
-<a name="author"></a>
+<a name="contributors"></a>
 
 ## Author
-<a href="https://www.linkedin.com/in/fowlerbenjamin/">Ben Fowler</a>
+<a href="https://www.linkedin.com/in/bhavin-desai"/>Bhavin Desai</a> - Solutions Architect and Evangelist
+<a href="https://www.linkedin.com/in/fowlerbenjamin/">Ben Fowler</a> - Solutions Builder and Software Developer
 <br>
-Please feel free to subscribe to his YouTube channel <a href="https://www.youtube.com/channel/UCQ5TipUHtc2LKLVEvCkzCvg">here</a> in which he frequently demonstrates different network use cases and solutions in AWS.
+Please feel free to subscribe to this YouTube channel <a href="https://www.youtube.com/channel/UCQ5TipUHtc2LKLVEvCkzCvg">here</a> for frequently demos on different network use-cases, solutions and tools in AWS.
