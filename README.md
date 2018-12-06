@@ -89,8 +89,8 @@ Once you have tagged the VPCs you want to attach:
 <br>
 <a name="contributors"></a>
 
-## Author
-<a href="https://www.linkedin.com/in/bhavin-desai"/>Bhavin Desai</a> - Solutions Architect and Evangelist
+## Contributors
+<a href="https://www.linkedin.com/in/bhavin-desai"/>Bhavin Desai</a> - Solutions Architect and Evangelist<br>
 <a href="https://www.linkedin.com/in/fowlerbenjamin/">Ben Fowler</a> - Solutions Builder and Software Developer
 <br>
 Please feel free to subscribe to this YouTube channel <a href="https://www.youtube.com/channel/UCQ5TipUHtc2LKLVEvCkzCvg">here</a> for frequently demos on different network use-cases, solutions and tools in AWS.
