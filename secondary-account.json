@@ -1,0 +1,84 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "This is the template that must be launched in all secondary accounts that you intend to access with the TGW migrator in the parent account. The stack will deploy the necessary IAM role to grant permissions to migrator tool for this account.",
+	"Metadata": {
+		"AWS::CloudFormation::Interface": {
+			"ParameterLabels": {
+				"ParentAccountId": {
+					"default": "Parent Acct ID"
+				}
+			}
+
+		}
+	},
+
+	"Parameters": {
+		"ParentAccountId": {
+			"Description": "Specify the parent AWS account that you launched the TGW migrator in. This stack will grant API access to that account for the tool",
+            "Type": "String",
+            "AllowedPattern": "[0-9]{12}",
+            "ConstraintDescription" : "You must provide a valid AWS account which the TGW migrator tool resides in. The format should be '000000000000' with no whitespaces"
+        }
+	},
+
+
+	"Resources": {
+
+    "IamPolicyForParentAccount": {
+        "Type": "AWS::IAM::Policy",
+        "Properties": {
+          "PolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                "ec2:DescribeRouteTables",
+                "ec2:CreateRoute",
+                "ec2:DeleteRoute",
+                "ec2:DescribeCustomerGateways",
+                "ec2:DescribeVpnConnections",
+                "ec2:DescribeVpnGateways",
+                "ec2:DescribeAvailabilityZones",
+                "ec2:DescribeSubnets",
+                "ec2:DescribeVpcs",
+                "ec2:CreateTransitGatewayVpcAttachment",
+                "ec2:DescribeTransitGateways",
+                "ec2:DescribeTransitGatewayVpcAttachments",
+                "ec2:DeleteTransitGatewayVpcAttachment",
+                "ram:AcceptResourceShareInvitation",
+                "ram:GetResourceShareInvitations"
+                ],
+                "Resource": "*"
+              }
+            ]
+          },
+          "PolicyName": "TgwMigratorCrossAccountAccess",
+          "Roles": [
+            {
+              "Ref": "IamRoleForParentAccount"
+            }
+          ]
+        }
+      },
+    "IamRoleForParentAccount": {
+        "Type": "AWS::IAM::Role",
+        "Properties": {
+          "AssumeRolePolicyDocument": {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": {"Ref":"ParentAccountId"}
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          },
+          "Path": "/",
+		  "RoleName": "TgwMigratorCrossAccountAccess"
+      }
+    }
+  }
+}
