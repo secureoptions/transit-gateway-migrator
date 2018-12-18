@@ -9,11 +9,14 @@
 				},
                 "SshCidr": {
                     "default": "SSH Source"
+                },
+                "Accounts": {
+                	"default": "Secondary Accounts"
+                }
                 }
 			}
 
-		}
-	},
+		},
 
 	"Parameters": {
 		"KeyName": {
@@ -27,6 +30,13 @@
             "Type": "String",
             "Default": "0.0.0.0/0",
             "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})/(\\d{1,2})"
+        },
+        "Accounts": {
+        	"Description": "the secondary AWS account numbers that you intend to run this TGW migrator tool for. Separate the 12-digit cccount numbers by commas (ie. 111111111111, 222222222222). If you do not have any secondary accounts, leave the default field '000000000000'",
+        	"Type": "String",
+        	"Default": "000000000000",
+        	"AllowedPattern": "( ?[0-9]{12} ?,?)*",
+          "ConstraintDescription":"You must choose valid account format (12-digits, no spaces, no hyphens, multiple accounts separated by commas)"
         }
 	},
 
@@ -123,6 +133,25 @@
             }
           },
 
+        "TgwMigratorVpcEndpoint": {
+            "Type" : "AWS::EC2::VPCEndpoint",
+            "Properties" : {
+              "VpcId" : {"Ref" : "TgwMigratorVpc"},
+              "RouteTableIds" : [ {"Ref" : "TgwMigratorRouteTable"} ],
+              "ServiceName" : {"Fn::Join" : ["", ["com.amazonaws.", {"Ref" : "AWS::Region"}, ".dynamodb"]] },
+              "PolicyDocument" :  {
+                "Version":"2012-10-17",
+                "Statement":[{
+                  "Effect":"Allow",
+                  "Principal": "*",
+                  "Action":["dynamodb:*"],
+                  "Resource":["arn:aws:dynamodb:*:*:table/TgwMigrationTable"]
+                }]
+                }
+            }
+          },
+
+
         "TgwMigratorSubnet": {
                 "Type" : "AWS::EC2::Subnet",
                 "Properties" : {
@@ -164,21 +193,35 @@
 					"Statement": [{
 							"Effect": "Allow",
 							"Action": [
-                                "ec2:CreateTransitGateway",
-                                "ec2:CreateTransitGatewayVpcAttachment",
-                                "ec2:CreateRoute",
-                                "ec2:DescribeTransitGateways",
-                                "ec2:DescribeSubnets",
-                                "ec2:DescribeVpcs",
-                                "ec2:DescribeAvailabilityZones",
-                                "ec2:DescribeRouteTables",
-                                "ec2:DescribeCustomerGateways",
-                                "ec2:DescribeVpnConnections",
-                                "ec2:DescribeVpnGateways",
-                                "ec2:DescribeTransitGatewayVpcAttachments",
-                                "ec2:DeleteTransitGatewayVpcAttachment",
-                                "ec2:DeleteTransitGateway",
-                                "ec2:DeleteRoute"
+			                  "ec2:DescribeRouteTables",
+			                  "ec2:CreateRoute",
+			                  "ec2:DeleteRoute",
+			                  "ec2:DescribeCustomerGateways",
+			                  "ec2:DescribeVpnConnections",
+			                  "ec2:DescribeVpnGateways",
+			                  "ec2:DescribeAvailabilityZones",
+			                  "ec2:DescribeSubnets",
+                        "ec2:DescribeVpcs",
+			                  "ec2:CreateTransitGateway",
+			                  "ec2:CreateTransitGatewayVpcAttachment",
+			                  "ec2:DescribeTransitGateways",
+			                  "ec2:DescribeTransitGatewayVpcAttachments",
+			                  "ec2:DeleteTransitGatewayVpcAttachment",
+			                  "ec2:DeleteTransitGateway",
+			                  "dynamodb:DescribeTable",
+			                  "dynamodb:GetItem",
+			                  "dynamodb:PutItem",
+			                  "dynamodb:DeleteItem",
+                        "dynamodb:UpdateItem",
+			                  "dynamodb:Scan",
+			                  "sts:AssumeRole",
+			                  "sts:GetCallerIdentity",
+			                  "ram:CreateResourceShare",
+			                  "ram:AcceptResourceShareInvitation",
+                        "ram:DeleteResourceShare",
+        							  "cloudformation:CreateStack",
+        							  "cloudformation:DescribeStackResources",
+        							  "cloudformation:DescribeStackResource"
 							],
 							"Resource": "*"
 						    }]
@@ -226,6 +269,54 @@
 
         "TgwMigrator": {
             "Type" : "AWS::EC2::Instance",
+            "Metadata" : {
+            	"AWS::CloudFormation::Init":{
+            		"config" : {
+            				"files":{
+            					"/etc/cfn/cfn-hup.conf": {
+		            				 "content" : { "Fn::Join" : ["", [
+										"[main]\n",
+										"stack=", { "Ref" : "AWS::StackName" }, "\n",
+										"region=", { "Ref" : "AWS::Region" }, "\n",
+										"interval=1\n",
+										"role=", { "Ref" : "TgwMigratorRole"}, "\n"
+									  ]]},
+									  "mode"  : "000400",
+									  "owner"   : "root",
+									  "group"   : "root"
+								},
+
+							   "/etc/cfn/hooks.d/cfn-auto-reloader.conf" : {
+									  "content": { "Fn::Join" : ["", [
+										"[cfn-auto-reloader-hook]\n",
+										"triggers=post.update\n",
+										"path=Resources.CgwEc2.Metadata.AWS::CloudFormation::Init\n",
+										"action=/opt/aws/bin/cfn-init -s ", { "Ref" : "AWS::StackId" }, " -r TgwMigrator ",
+										" --region ", { "Ref" : "AWS::Region" }, "\n",  
+										"runas=root\n"
+									  ]]}
+
+            					}
+                },
+            "commands": {
+								"A": {
+									"command": "rm -f /home/ec2-user/tgw-migrator/dependencies/accounts.txt"
+									},
+								"B": {
+									"command": "killall cfn-hup",
+									"ignoreErrors" : "true"
+									},
+								"C":{
+									"command": "echo $ACCOUNTS >> /home/ec2-user/tgw-migrator/dependencies/accounts.txt",
+									"env": { "ACCOUNTS": {"Ref": "Accounts"}}
+								},
+								"D": {
+									"command": "/opt/aws/bin/cfn-hup --verbose"
+								}
+            				}
+            			}
+            		}
+            	},
             "Properties" : {
                "IamInstanceProfile" : {"Ref" : "TgwMigratorProfile"},
                "ImageId" : {"Fn::FindInMap" : ["RegionMap", {"Ref" : "AWS::Region"},"AmazonLinux"]},
@@ -246,14 +337,38 @@
                             "# Pull down TGW migrator & extract it\n",
                             "wget -O /home/ec2-user/tgw-migrator.tar.gz https://github.com/secureoptions/transit-gateway-migrator/raw/master/tgw-migrator.tar.gz\n",
                             "tar -C /home/ec2-user/ -xvzf /home/ec2-user/tgw-migrator.tar.gz\n",
-                            "rm -f /home/ec2-user/tgw-migrator.tar.gz\n"
+                            "rm -f /home/ec2-user/tgw-migrator.tar.gz\n",
+                            "# Install the files from the metadata\n",
+							"/opt/aws/bin/cfn-init -v ",
+							"         --stack ", { "Ref" : "AWS::StackName" },
+							"         --resource TgwMigrator ",
+							"         --region ", { "Ref" : "AWS::Region" }, "\n"
 
                         ]]
                     }
                 },
                "Tags" : [ {"Key" : "Name", "Value" : "TGW-Migrator"}]
             }
-         }
+				 },
+				 "TgwMigratorTable": {
+						"Type" : "AWS::DynamoDB::Table",
+						"Properties" : {
+							"AttributeDefinitions" : [
+								{
+									"AttributeName" : "VpcId",
+									"AttributeType": "S"
+								}
+									],
+                            "BillingMode" : "PAY_PER_REQUEST",
+							"KeySchema" : [
+								{
+									"AttributeName" : "VpcId",
+									"KeyType" : "HASH"
+								}
+							],
+							"TableName" : "TgwMigrationTable"
+						}
+				}
     },
     "Outputs" : {
         "Access" : {
