@@ -3,7 +3,6 @@
 - [Description](#description)
 - [Important Limitations](#limitations)
 - [Benefits of Using TGW Migrator](#benefits)
-- [Pre-Deployment Requirements](#requirements)
 - [General Deployment](#deployment)
 - [Instructions to Migrate Transit VPC to Transit Gateway](#transitvpc)
 - [Instructions to Attach Standalone VPCs to Transit Gateway](#taggedvpc)
@@ -22,18 +21,12 @@ You start by deploying a Cloudformation stack which in turn provisions a new ded
 
 ## Important Limitations<br>
 - This tool can only migrate VPCs to a Transit Gateway which are all in the same AWS region.
-- It does not work across AWS accounts (but this will hopefully change over next couple of weeks)
 - The tool is capable of migrating all "spoke VPCs" in a transit VPC to a Transit Gateway. However, it cannot automate the migration of on-prem VPNs to the Transit Gateway. This portion must be done manually.
 <br>
 <a name="benefits"></a>
 
 ## Benefits of Using TGW Migrator<br>
 Aside from quickly and seamlessly migrating your VPCs to the Transit Gateway, this tool is also provides a quick option to roll back the migration if something went wrong. A process that could take minutes to hours to do manually (depending on how many VPCs you have) is easily accomplished within a few seconds.
-<br>
-<a name="requirements"></a>
-
-## Pre-Deployment Requirements<br>
-Make sure that each VPC that you intend to migrate to a Transit Gateway has at least one subnet in each Availability Zone (the subnet can be either public or private). If you don't do this the tool will ignore the VPC when it starts the migration to the Transit Gateway.
 <br>
 <a name="deployment">
   
@@ -63,9 +56,9 @@ Make sure that each VPC that you intend to migrate to a Transit Gateway has at l
  <br>
  When you deploy the TGW Migrator tool, you will move your VPCs off of transit VPC unto Transit Gateway in two steps:
  <ol>
-  <li> Start the tool and choose <b>A) Attach VPCs to TGW</b>. At some point during the attachment process, you will be asked to provide the Customer Gateway (CGW) public IP of one of the hub routers in your transit VPC. Note that if you are running two or more hub routers for redundancy, you can simply choose one of their IPs at random (so '1.1.1.1' could be used in the Figure 1 for example). The tool will use this to trace down all the connected VPNs and their respective spoke VPCs that need to be migrated to the Transit Gateway.
+  <li> Start the tool and choose <b>A) Attach VPCs to registered TGW</b>. At some point during the attachment process, you will be asked to provide the Customer Gateway (CGW) public IP of one of the hub routers in your transit VPC. Note that if you are running two or more hub routers for redundancy, you can simply choose one of their IPs at random (so '1.1.1.1' could be used in the Figure 1 for example). The tool will use this to trace down all the connected VPNs and their respective spoke VPCs that need to be migrated to the Transit Gateway.
   <li> Once the tool has finished attaching the VPCs, run it again and choose <b>B) Enable routing between attached VPCs</b>. This step will actually move your traffic off of the transit VPC since it inserts static routes into each of the VPCs' main route table which point to the Transit Gateway as the next hop (static routes take preference over BGP propagated routes from the transit VPC)</li>
-  <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between VPCs and detach VPCs from TGW</b></li>
+  <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between attached VPCs</b></li>
   </ol>
  <br>
  Below is an illustration of these steps:
@@ -82,9 +75,9 @@ Your tag should then look like this<br>
 <br>
 Once you have tagged the VPCs you want to attach:
 <ol>
-  <li>Start the tool and choose <b>A) Attach VPCs to TGW</b></li>
+  <li>Start the tool and choose <b>A) Attach VPCs to registered TGW</b></li>
   <li>Once the tool has finished attaching the VPCs, run it again and choose <b>B) Enable routing between attached VPCs</b>. This step will actually start routing your traffic between VPCs over the TGW</li>
-  <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between VPCs and detach VPCs from TGW</b></li>
+  <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between attached VPCs</b></li>
   </ol>
 <br>
 <a name="contributors"></a>
