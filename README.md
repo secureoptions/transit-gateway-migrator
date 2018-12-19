@@ -82,6 +82,15 @@ Once you have tagged the VPCs you want to attach:
 <br>
 <a name="contributors"></a>
 
+## Enabling Cross-Account Access for the TGW Migrator
+You can optionally grant the TGW Migrator tool API access to secondary AWS accounts. The tool will share a Transit Gateway with any secondary accounts through <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html">Resource Access Manager (RAM)</a> automatically, attach the accounts' VPCs to the TGW and finally enabling routing between all VPCs in all accounts. Granting cross-account access can be done in three steps:
+<ol>
+  <li>First, launch the <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=TGW-Migrator&templateURL=https://s3.amazonaws.com/secure-options/tgw-migrator-cf.json">TGW Cloudformation stack in a primary account</a></li>
+  <li>SSH into the TGW Migrator EC2 and run the tool once the Cloudformation stack has fully deployed from step #1</li>
+  <li>Choose <b>B) Share registered TGW with other AWS accounts</b>. This will lead you through the steps to add any secondary AWS account Ids that you would like the TGW migrator to share the TGW with,attach VPCs from and enabling routing for.</li>
+  <li>Once you provide the secondary account numbers, the TGW migrator tool will continuously poll for successful access to the secondary accounts. At this time you will want to launch the <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=Secondary-Account-Role-For-Migrator&templateURL=https://s3.amazonaws.com/secure-options/secondary-account-tgw-migrator.json">Secondary Account Cloudformation Template</a> in any secondary accounts. This template will deploy appropriate IAM permissions for the tool in the primary account to make cross-account API calls.</li>
+ </ol>
+
 ## Contributors
 <a href="https://www.linkedin.com/in/bhavin-desai"/>Bhavin Desai</a> - Solutions Architect and Evangelist<br>
 <a href="https://www.linkedin.com/in/fowlerbenjamin/">Ben Fowler</a> - Solutions Builder and Software Developer
