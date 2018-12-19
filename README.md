@@ -83,7 +83,7 @@ Once you have tagged the VPCs you want to attach:
 <a name="contributors"></a>
 
 ## Enabling Cross-Account Access for the TGW Migrator
-You can optionally grant the TGW Migrator tool API access to secondary AWS accounts. The tool will share a Transit Gateway with any secondary accounts through <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html">Resource Access Manager (RAM)</a> automatically, attach the accounts' VPCs to the TGW and finally enabling routing between all VPCs in all accounts. Granting cross-account access can be done in three steps:
+You can optionally grant the TGW Migrator tool API access to secondary AWS accounts. The tool will share a Transit Gateway with any secondary accounts through <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html">Resource Access Manager (RAM)</a> automatically, attach the accounts' VPCs to the TGW and finally enabling routing between all VPCs in all accounts. Granting cross-account access can be done in four steps:
 <ol>
   <li>First, launch the <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=TGW-Migrator&templateURL=https://s3.amazonaws.com/secure-options/tgw-migrator-cf.json">TGW Cloudformation stack in a primary account</a></li>
   <li>SSH into the TGW Migrator EC2 and run the tool once the Cloudformation stack has fully deployed from step #1</li>
