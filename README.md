@@ -6,6 +6,7 @@
 - [General Deployment](#deployment)
 - [Instructions to Migrate Transit VPC to Transit Gateway](#transitvpc)
 - [Instructions to Attach Standalone VPCs to Transit Gateway](#taggedvpc)
+- [Enabling Cross-Account Access for the TGW Migrator](#crossaccount)
 - [Contributors](#contributors)
 <br>
 
@@ -80,7 +81,7 @@ Once you have tagged the VPCs you want to attach:
   <li> If you find that the migration was not successful you can roll it back by starting the tool once more and choosing <b>C) Disable routing between attached VPCs</b></li>
   </ol>
 <br>
-<a name="contributors"></a>
+<a name="crossaccount"></a>
 
 ## Enabling Cross-Account Access for the TGW Migrator
 You can optionally grant the TGW Migrator tool API access to secondary AWS accounts. The tool will share a Transit Gateway with any secondary accounts through <a href="https://docs.aws.amazon.com/ram/latest/userguide/what-is.html">Resource Access Manager (RAM)</a> automatically, attach the accounts' VPCs to the TGW and finally enabling routing between all VPCs in all accounts. Granting cross-account access can be done in the following steps:
@@ -91,6 +92,9 @@ You can optionally grant the TGW Migrator tool API access to secondary AWS accou
   <li>Once you provide the secondary account numbers, the TGW migrator tool will continuously poll for successful access to the secondary accounts. At this time you will want to launch the <a href="https://console.aws.amazon.com/cloudformation/home?#/stacks/new?stackName=Secondary-Account-Role-For-Migrator&templateURL=https://s3.amazonaws.com/secure-options/secondary-account-tgw-migrator.json">Secondary Account Cloudformation stack</a> in any secondary accounts. This template will deploy appropriate IAM permissions for the tool in the primary account to make cross-account API calls.</li>
   <li>You should eventually see the TGW migrator go from a polling state to stating <b>"Success!!! All secondary accounts are ready for deployment!"</b> and return you to the main menu. At this point you can proceed with attaching VPCs, enabling routing, etc through the tool. The tool which check each account automatically.</li>
  </ol>
+  <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Illustrations/Figure4.PNG" align="center" width="700" height="400"/>
+<br>
+<a name="contributors"></a>
 
 ## Contributors
 <a href="https://www.linkedin.com/in/bhavin-desai"/>Bhavin Desai</a> - Solutions Architect and Evangelist<br>
