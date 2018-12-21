@@ -1,4 +1,4 @@
-# TGW Migrator
+# Transit Gateway Migrator
 
 - [Description](#description)
 - [Important Limitations](#limitations)
