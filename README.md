@@ -97,6 +97,7 @@ You can optionally grant the TGW Migrator tool API access to secondary AWS accou
 <a name="contributors"></a>
 
 ## Contributors
+
 <style>
 .column {
   float: left;
