@@ -98,7 +98,8 @@ You can optionally grant the TGW Migrator tool API access to secondary AWS accou
 
 ## Contributors
 <a href="https://www.linkedin.com/in/bhavin-desai"/><img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/bhavin.jpg" width="75" height="100"/><br>Bhavin Desai</a> - AWS Sr.Solutions Architect//Evangelist<br>
-<a href="https://www.linkedin.com/in/fowlerbenjamin/">Ben Fowler</a> - AWS Sr.Cloud Support Engineer//Software Developer
+&nbsp;
+<a href="https://www.linkedin.com/in/fowlerbenjamin/"><img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/ben.jpg" width="75" height="100"/><br>Ben Fowler</a> - AWS Sr.Cloud Support Engineer//Software Developer
 <br>
 <br>
 Please feel free to subscribe to the YouTube channel <a href="https://www.youtube.com/channel/UCQ5TipUHtc2LKLVEvCkzCvg">here</a> for frequent demos on different network use-cases, solutions and tools in AWS.
