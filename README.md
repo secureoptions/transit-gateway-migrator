@@ -99,7 +99,7 @@ You can optionally grant the TGW Migrator tool API access to secondary AWS accou
 ## Contributors
 <div align="center">
 <img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/BenBhavin.PNG" alt="tgw-migrator-contributors"/><br>
-Ben Fowler                          Bhavin Desai</div>
+Ben Fowler&nbsp;&nbsp;&nbsp;&nbsp;Bhavin Desai</div>
 </div>
 <br>
 <br>
