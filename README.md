@@ -102,21 +102,9 @@ You can optionally grant the TGW Migrator tool API access to secondary AWS accou
     <a href="https://www.linkedin.com/in/fowlerbenjamin/"><img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/ben.jpg" width="75" height="100"/><br>Ben Fowler</a><br>AWS Sr.Cloud Support Engineer//Software Developer
   </div>
   <div class="column">
-     <a href="https://www.linkedin.com/in/bhavin-desai"/><img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/bhavin.jpg" style="width:20%" alt="Bhavin"/><br>Bhavin Desai</a><br>AWS Sr.Solutions Architect//Evangelist
+     <a href="https://www.linkedin.com/in/bhavin-desai"/><img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/bhavin.jpg" style="width:10%" alt="Bhavin"/><br>Bhavin Desai</a><br>AWS Sr.Solutions Architect//Evangelist
   </div>
 </div> 
-
-
-<div id="banner" style="overflow: hidden; display: inline-block;">
-<div class="" style="max-width: 20%; max-height: 20%;">
-    <a href="https://www.linkedin.com/in/bhavin-desai"/><img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/bhavin.jpg" width="75" height="100"/><br>Bhavin Desai</a><br>AWS Sr.Solutions Architect//Evangelist
-</div>
-
-<div class="" style="max-width: 20%; max-height: 20%;">
-<a href="https://www.linkedin.com/in/fowlerbenjamin/"><img src="https://github.com/secureoptions/transit-gateway-migrator/raw/master/Authors/ben.jpg" width="75" height="100"/><br>Ben Fowler</a><br>AWS Sr.Cloud Support Engineer//Software Developer
-</div>
-</div>
-
 <br>
 <br>
 Please feel free to subscribe to the YouTube channel <a href="https://www.youtube.com/channel/UCQ5TipUHtc2LKLVEvCkzCvg">here</a> for frequent demos on different network use-cases, solutions and tools in AWS.
