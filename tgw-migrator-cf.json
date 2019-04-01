@@ -277,8 +277,8 @@
                             "# Pull down TGW migrator & extract it\n",
                             "wget -O /home/ec2-user/tgw-migrator.tar.gz https://github.com/secureoptions/transit-gateway-migrator/raw/master/tgw-migrator.tar.gz\n",
                             "tar -C /home/ec2-user/ -xvzf /home/ec2-user/tgw-migrator.tar.gz\n",
-                            "rm -f /home/ec2-user/tgw-migrator.tar.gz\n"
-
+                            "rm -f /home/ec2-user/tgw-migrator.tar.gz\n",
+			    "yum update -y\n",
                         ]]
                     }
                 },
